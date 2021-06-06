@@ -26,6 +26,7 @@
   },
   "homepage": "https://github.com/monoless/lifegame#readme",
   "dependencies": {
+    "packager": "^0.1.9",
     "phaser": "^3.22.0"
   },
   "devDependencies": {

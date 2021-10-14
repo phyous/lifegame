@@ -1,5 +1,7 @@
 import Cell from "@/Cell";
 import GameConfig from "@/GameConfig";
+import * as Tone from 'tone';
+import { PolySynth } from "tone";
 
 const SCENE_KEY: string = 'main-scene';
 
@@ -10,6 +12,7 @@ export default class MainScene extends Phaser.Scene {
     private stageWidth: number;
     private stageHeight: number;
     private timer: any;
+    private synth: PolySynth;
 
     constructor() {
         super(SCENE_KEY);
@@ -17,6 +20,7 @@ export default class MainScene extends Phaser.Scene {
         this.stageWidth = GAME_WIDTH / GameConfig.CELL_SIZE;
         this.stageHeight = GAME_HEIGHT / GameConfig.CELL_SIZE;
         this.generation = 0;
+        this.synth = new Tone.PolySynth(Tone.Synth).toDestination();
     }
 
     public init(): void {
@@ -48,6 +52,16 @@ export default class MainScene extends Phaser.Scene {
     }
 
     private nextGeneration(): void {
+        if (this.generation % 100 == 0) {
+            const now = Tone.now()
+            this.synth.triggerAttack("D4", now);
+            this.synth.triggerAttack("F4", now + 0.5);
+            this.synth.triggerAttack("A4", now + 1);
+            this.synth.triggerAttack("C5", now + 1.5);
+            this.synth.triggerAttack("E5", now + 2);
+            this.synth.triggerRelease(["D4", "F4", "A4", "C5", "E5"], now + 4);
+            console.log("PLAY!");
+        }
         this.generation++;
         Array.from(Array(this.stageSize).keys()).forEach(index => {
             const active = this.cells[index].active;
